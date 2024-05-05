@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_on_surface"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="16sp"
+        tools:text="AI Highlights" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:textColor="@color/color_on_surface_variant"
+        tools:text="北京市住建委发布住房限购政策调整，允许已拥有住房的居民在五环外购房\n\n华为事故并不影响其产品质量，但营销策略可能会影响公司发展\n\nBTC大跌受美联储降息预期影响，经济规律不可违背" />
+
+</LinearLayout>
