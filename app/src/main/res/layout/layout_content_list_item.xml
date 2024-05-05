@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="144dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg_content_list_item"
+    android:padding="16dp">
+    
+    <ImageView
+        android:id="@+id/iv_thumbnail"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="fitXY"
+        tools:src="@drawable/pic_placeholder"/>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_thumbnail"
+        android:layout_marginEnd="24dp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="@color/color_on_surface"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="16sp"
+        tools:text="This is a title text ffjkljsf hkjsf hkjh kjh hkjh hkjh hkjh hkjh hjkh hjkh hkjh hjkh hkjhk kjh " />
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_thumbnail"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:maxLines="3"
+        android:textColor="@color/color_on_surface_variant"
+        android:textSize="14sp"
+        tools:text="This is a description text ffjkljsf hkjsf hkjh kjh hkjh hkjh hkjh hkjh hjkh hjkh hkjh hjkh hkjhk kjh " />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
