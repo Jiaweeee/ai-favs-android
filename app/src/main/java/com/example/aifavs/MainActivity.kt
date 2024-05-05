@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
@@ -22,6 +23,7 @@ import java.lang.StringBuilder
 class MainActivity : AppCompatActivity() {
     private val viewModel: ContentViewModel by lazy { ContentViewModel() }
     private lateinit var mAdapter: ContentListAdapter
+    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +32,10 @@ class MainActivity : AppCompatActivity() {
         viewModel.getContentList()
         viewModel.contentList.observe(this) { list ->
             mAdapter.submitList(list)
+            mAdapter.notifyDataSetChanged()
+        }
+        viewModel.loading.observe(this) { isLoading ->
+            mSwipeRefreshLayout.isRefreshing = isLoading
         }
     }
 
@@ -39,6 +45,11 @@ class MainActivity : AppCompatActivity() {
         rvContentList.layoutManager = LinearLayoutManager(this)
         rvContentList.addItemDecoration(BottomMarginDecoration(16f))
         rvContentList.adapter = mAdapter
+
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh)
+        mSwipeRefreshLayout.setOnRefreshListener {
+            viewModel.getContentList()
+        }
     }
 }
 
@@ -80,6 +91,7 @@ class ContentListAdapter: BaseQuickAdapter<ContentItem, QuickViewHolder>() {
         if (item.labels != null) {
             labelContainer.visibility = View.VISIBLE
             val labelsView = holder.getView<ChipGroup>(R.id.labels)
+            labelsView.removeAllViews()
             for (label in item.labels) {
                 labelsView.addView(createChip(label, context))
             }
