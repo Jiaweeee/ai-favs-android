@@ -5,7 +5,7 @@
     android:minHeight="144dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/bg_content_list_item"
+    android:background="@drawable/bg_container_radius_8"
     android:paddingHorizontal="16dp"
     android:paddingTop="16dp"
     android:paddingBottom="8dp">

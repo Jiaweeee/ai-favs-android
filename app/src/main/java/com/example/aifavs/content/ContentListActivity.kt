@@ -1,6 +1,7 @@
-package com.example.aifavs
+package com.example.aifavs.content
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Rect
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,26 +11,46 @@ import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
+import com.example.aifavs.ContentItem
+import com.example.aifavs.R
+import com.example.aifavs.dp2px
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import java.lang.StringBuilder
 
-class MainActivity : AppCompatActivity() {
+class ContentListActivity : AppCompatActivity() {
     private val viewModel: ContentViewModel by lazy { ContentViewModel() }
     private lateinit var mAdapter: ContentListAdapter
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+    private var categoryId: String? = null
+
+    companion object {
+        private const val KEY_TITLE = "key_title"
+        private const val KEY_CATEGORY_ID = "key_category_id"
+
+        fun navigate(context: Context, title: String, categoryId: String? = null) {
+            val intent = Intent(context, ContentListActivity::class.java)
+            intent.putExtra(KEY_TITLE, title)
+            categoryId?.let {
+                intent.putExtra(KEY_CATEGORY_ID, categoryId)
+            }
+            context.startActivity(intent)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_content_list)
         initView()
-        viewModel.getContentList()
+        categoryId = intent.getStringExtra(KEY_CATEGORY_ID)
+        viewModel.getContentList(categoryId)
         viewModel.contentList.observe(this) { list ->
             mAdapter.submitList(list)
             mAdapter.notifyDataSetChanged()
@@ -48,7 +69,15 @@ class MainActivity : AppCompatActivity() {
 
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh)
         mSwipeRefreshLayout.setOnRefreshListener {
-            viewModel.getContentList()
+            viewModel.getContentList(categoryId)
+        }
+
+        val tvTitle = findViewById<TextView>(R.id.tv_title)
+        val title = intent.getStringExtra(KEY_TITLE)
+        tvTitle.text = title ?: ""
+
+        findViewById<ImageView>(R.id.iv_btn_chat).setOnClickListener {
+            Toast.makeText(this, "Not implemented yet :)", Toast.LENGTH_SHORT).show()
         }
     }
 }

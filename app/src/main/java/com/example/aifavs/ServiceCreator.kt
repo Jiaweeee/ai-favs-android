@@ -12,7 +12,7 @@ object ServiceCreator {
     private val okHttpClient by lazy { OkHttpClient().newBuilder() }
     private val retrofit: Retrofit by lazy {
         val builder = Retrofit.Builder()
-            .baseUrl("http://192.168.0.106:8000")
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         val dispatcher = Dispatcher()

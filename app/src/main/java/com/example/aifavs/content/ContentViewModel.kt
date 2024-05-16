@@ -1,8 +1,11 @@
-package com.example.aifavs
+package com.example.aifavs.content
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.aifavs.ContentItem
+import com.example.aifavs.RemoteApi
+import com.example.aifavs.ServiceCreator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -15,9 +18,9 @@ class ContentViewModel: ViewModel() {
         ServiceCreator.create(RemoteApi::class.java)
     }
 
-    fun getContentList() {
+    fun getContentList(categoryId: String? = null) {
         loading.value = true
-        val disposable = remoteApi.getContentList()
+        val disposable = remoteApi.getContentList(categoryId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally {

@@ -4,6 +4,21 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
+def getProperty(String fileName, String propName) {
+    def propsFile = rootProject.file(fileName)
+    if (propsFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        if (props[propName] != null) {
+            return props[propName]
+        } else {
+            print("No such prop: " + propName + " in file: " + fileName)
+        }
+    } else {
+        print("No such file: " + fileName)
+    }
+}
+
 android {
     namespace 'com.example.aifavs'
     compileSdk 34
@@ -15,7 +30,12 @@ android {
         versionCode 1
         versionName "1.0"
 
+        buildConfigField "String", "BASE_URL", "\"${getProperty("local.properties", "base_url")}\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     buildTypes {

@@ -28,16 +28,8 @@
             android:textColor="@color/black"
             android:textStyle="bold"
             android:fontFamily="sans-serif-medium"
-            android:text="@string/my_collections" />
+            tools:text="Technology" />
 
-        <ImageView
-            android:id="@+id/iv_add"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/ic_add" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -66,7 +58,7 @@
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="24dp"
         android:padding="12dp"
-        android:background="@drawable/bg_ai_chat_btn"
+        android:background="@drawable/bg_container_primary_radius_30"
         android:src="@drawable/ic_ai_star"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
