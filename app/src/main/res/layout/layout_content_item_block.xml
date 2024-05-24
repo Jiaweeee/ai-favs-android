@@ -12,7 +12,7 @@
         android:textColor="@color/color_on_surface"
         android:fontFamily="sans-serif-medium"
         android:textSize="16sp"
-        tools:text="AI Highlights" />
+        tools:text="AI Summary" />
 
     <TextView
         android:id="@+id/tv_content"

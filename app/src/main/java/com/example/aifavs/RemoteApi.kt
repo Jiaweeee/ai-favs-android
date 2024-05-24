@@ -9,8 +9,9 @@ import retrofit2.http.Query
 interface RemoteApi {
     @GET("content/list/get")
     fun getContentList(
-        @Query("category_id") categoryId: String? = null
-    ): Observable<BaseResponse<List<ContentItem>>>
+        @Query("category_id") categoryId: String? = null,
+        @Query("tag_id") tagId: String? = null
+    ): Observable<BaseResponse<List<Collection>>>
 
     @POST("content/add")
     fun addContent(@Body body: AddContentRequestBody): Observable<BaseResponse<String>>

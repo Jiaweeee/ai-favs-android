@@ -1,9 +1,8 @@
-package com.example.aifavs.content
+package com.example.aifavs.collections
 
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -11,21 +10,20 @@ import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
-import com.example.aifavs.ContentItem
+import com.example.aifavs.Collection
 import com.example.aifavs.R
+import com.example.aifavs.base.BaseActivity
 import com.example.aifavs.dp2px
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import java.lang.StringBuilder
 
-class ContentListActivity : AppCompatActivity() {
+class ContentListActivity : BaseActivity() {
     private val viewModel: ContentViewModel by lazy { ContentViewModel() }
     private lateinit var mAdapter: ContentListAdapter
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
@@ -75,10 +73,6 @@ class ContentListActivity : AppCompatActivity() {
         val tvTitle = findViewById<TextView>(R.id.tv_title)
         val title = intent.getStringExtra(KEY_TITLE)
         tvTitle.text = title ?: ""
-
-        findViewById<ImageView>(R.id.iv_btn_chat).setOnClickListener {
-            Toast.makeText(this, "Not implemented yet :)", Toast.LENGTH_SHORT).show()
-        }
     }
 }
 
@@ -96,8 +90,8 @@ class BottomMarginDecoration(
     }
 }
 
-class ContentListAdapter: BaseQuickAdapter<ContentItem, QuickViewHolder>() {
-    override fun onBindViewHolder(holder: QuickViewHolder, position: Int, item: ContentItem?) {
+class ContentListAdapter: BaseQuickAdapter<Collection, QuickViewHolder>() {
+    override fun onBindViewHolder(holder: QuickViewHolder, position: Int, item: Collection?) {
         if (item == null) {
             return
         }
@@ -117,24 +111,23 @@ class ContentListAdapter: BaseQuickAdapter<ContentItem, QuickViewHolder>() {
             .into(ivThumbnail)
 
         val labelContainer = holder.getView<HorizontalScrollView>(R.id.labels_container)
-        if (item.labels != null) {
+        if (item.tags != null) {
             labelContainer.visibility = View.VISIBLE
             val labelsView = holder.getView<ChipGroup>(R.id.labels)
             labelsView.removeAllViews()
-            for (label in item.labels) {
-                labelsView.addView(createChip(label, context))
+            for (tag in item.tags) {
+                labelsView.addView(createChip(tag.name, context))
             }
         } else {
             labelContainer.visibility = View.GONE
         }
 
         val ivMore = holder.getView<ImageView>(R.id.iv_more)
-        if (item.summary == null && item.highlights == null) {
+        if (item.summary == null) {
             ivMore.visibility = View.GONE
         } else {
             ivMore.visibility = View.VISIBLE
             bindSummary(item.summary, holder)
-            bindHighlights(item.highlights, holder)
             val aiContentBlocks = holder.getView<LinearLayout>(R.id.ai_content_blocks)
             ivMore.setOnClickListener {
                 if (aiContentBlocks.visibility == View.GONE) {
@@ -166,28 +159,6 @@ class ContentListAdapter: BaseQuickAdapter<ContentItem, QuickViewHolder>() {
         tvTitle.text = "AI Summary"
         val tvContent = blockView.findViewById<TextView>(R.id.tv_content)
         tvContent.text = summary
-    }
-
-    private fun bindHighlights(highlights: List<String>?, holder: QuickViewHolder) {
-        val blockView = holder.getView<LinearLayout>(R.id.block_ai_highlights)
-        if (highlights == null) {
-            blockView.visibility = View.GONE
-            return
-        } else {
-            blockView.visibility = View.VISIBLE
-        }
-        val tvTitle = blockView.findViewById<TextView>(R.id.tv_title)
-        tvTitle.text = "AI Highlights"
-        val tvContent = blockView.findViewById<TextView>(R.id.tv_content)
-        tvContent.text = buildHighlightText(highlights)
-    }
-
-    private fun buildHighlightText(highlights: List<String>): String {
-        val sb = StringBuilder()
-        for (text in highlights) {
-            sb.append(text).append("\n\n")
-        }
-        return sb.toString()
     }
 
     override fun onCreateViewHolder(

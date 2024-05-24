@@ -1,9 +1,9 @@
-package com.example.aifavs.home
+package com.example.aifavs.collections
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.aifavs.ContentItem
+import com.example.aifavs.Collection
 import com.example.aifavs.RemoteApi
 import com.example.aifavs.ServiceCreator
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -15,8 +15,8 @@ data class Folder(
     val itemCount: Int
 )
 
-class HomeViewModel: ViewModel() {
-    private val TAG = "HomeViewModel"
+class CollectionsViewModel : ViewModel() {
+    private val TAG = "CollectionsViewModel"
     val folders : MutableLiveData<List<Folder>> = MutableLiveData(emptyList())
     val loading: MutableLiveData<Boolean> = MutableLiveData(false)
 
@@ -43,7 +43,7 @@ class HomeViewModel: ViewModel() {
             })
     }
 
-    private fun toFolders(contentList: List<ContentItem>): List<Folder> {
+    private fun toFolders(contentList: List<Collection>): List<Folder> {
         val categories = contentList.filter { it.category != null }.map { it.category }
         // Group categories by id
         val countMap = categories.groupingBy { it!!.id }.eachCount()

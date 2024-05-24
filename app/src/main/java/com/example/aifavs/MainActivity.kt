@@ -1,0 +1,62 @@
+package com.example.aifavs
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import com.example.aifavs.assistant.AssistantActivity
+import com.example.aifavs.base.BaseActivity
+import com.example.aifavs.collections.CollectionsFragment
+import com.example.aifavs.insights.InsightsFragment
+import com.example.aifavs.podcast.PodcastFragment
+import com.example.aifavs.settings.SettingsFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+
+class MainActivity : BaseActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        initViews()
+    }
+
+    private fun initViews() {
+        val navigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        navigationView.setOnItemSelectedListener { item ->
+            var fragment: Fragment? = null
+            val selectTab = when(item.itemId) {
+                R.id.tab_insights -> {
+                    fragment = InsightsFragment.newInstance()
+                    true
+                }
+                R.id.tab_collections -> {
+                    fragment = CollectionsFragment.newInstance()
+                    true
+                }
+                R.id.tab_ai_assistant -> {
+                    false
+                }
+                R.id.tab_podcast -> {
+                    fragment = PodcastFragment.newInstance()
+                    true
+                }
+                R.id.tab_more -> {
+                    fragment = SettingsFragment.newInstance()
+                    true
+                }
+                else -> false
+            }
+            fragment?.let {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.content_container, it)
+                    .commit()
+            }
+            if (item.itemId == R.id.tab_ai_assistant) {
+                AssistantActivity.navigate(this)
+            }
+            selectTab
+        }
+        if (supportFragmentManager.fragments.isEmpty()) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.content_container, InsightsFragment.newInstance())
+                .commit()
+        }
+    }
+}

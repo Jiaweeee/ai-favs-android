@@ -16,7 +16,7 @@
         android:theme="@style/Theme.AIFavs"
         tools:targetApi="31">
         <activity
-            android:name=".home.HomeActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -26,12 +26,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".chat.ChatActivity"
-            android:exported="false" />
+            android:name=".assistant.AssistantActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".content.ContentListActivity"
-            android:exported="false" />
-
+            android:name=".collections.ContentListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

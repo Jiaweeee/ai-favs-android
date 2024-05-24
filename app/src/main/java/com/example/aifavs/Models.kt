@@ -11,25 +11,29 @@ data class BaseResponse<T>(
 )
 
 @Serializable
-data class ContentCategory(
+data class Tag(
+    val id: String,
+    val name: String,
+)
+
+@Serializable
+data class Category(
     val id: String,
     val name: String,
     val description: String
 )
 
 @Serializable
-data class ContentItem(
+data class Collection(
     val id: String,
     val url: String,
     val title: String?,
     val description: String?,
-    val thumbnail: String?,
-    val category: ContentCategory?,
-    @SerializedName("full_text") val fullText: String?,
-    @SerializedName("ai_labels") val labels: List<String>?,
-    @SerializedName("ai_summary") val summary: String?,
-    @SerializedName("ai_highlights") val highlights: List<String>?,
-    @SerializedName("ai_podcast_url") val podcastUrl: String?,
+    @SerializedName("thumbnail_url")val thumbnail: String?,
+    val category: Category?,
+    val tags: List<Tag>?,
+    val summary: String?,
+    val highlights: List<String>?,
 )
 
 @Serializable

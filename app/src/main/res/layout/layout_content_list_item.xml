@@ -5,7 +5,7 @@
     android:minHeight="144dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/bg_container_radius_8"
+    android:background="@drawable/bg_container_radius_12"
     android:paddingHorizontal="16dp"
     android:paddingTop="16dp"
     android:paddingBottom="8dp">
@@ -94,13 +94,6 @@
             android:id="@+id/block_ai_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/layout_content_item_block" />
-
-        <include
-            android:id="@+id/block_ai_highlights"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             layout="@layout/layout_content_item_block" />
 
     </LinearLayout>
