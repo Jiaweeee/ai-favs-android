@@ -9,7 +9,7 @@ import com.example.aifavs.ServiceCreator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class ContentViewModel: ViewModel() {
+class CollectionListViewModel: ViewModel() {
     private val TAG = "ContentViewModel"
     val contentList: MutableLiveData<List<Collection>> = MutableLiveData()
     val loading: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -18,9 +18,12 @@ class ContentViewModel: ViewModel() {
         ServiceCreator.create(RemoteApi::class.java)
     }
 
-    fun getContentList(categoryId: String? = null) {
+    fun getContentList(
+        categoryId: String? = null,
+        tagId: String? = null
+    ) {
         loading.value = true
-        val disposable = remoteApi.getContentList(categoryId)
+        val disposable = remoteApi.getContentList(categoryId, tagId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally {

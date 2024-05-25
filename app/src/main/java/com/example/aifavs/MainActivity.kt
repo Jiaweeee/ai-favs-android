@@ -4,10 +4,11 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.aifavs.assistant.AssistantActivity
 import com.example.aifavs.base.BaseActivity
-import com.example.aifavs.collections.CollectionsFragment
+import com.example.aifavs.collections.CollectionHomeFragment
 import com.example.aifavs.insights.InsightsFragment
 import com.example.aifavs.podcast.PodcastFragment
 import com.example.aifavs.settings.SettingsFragment
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : BaseActivity() {
@@ -17,27 +18,36 @@ class MainActivity : BaseActivity() {
         initViews()
     }
 
+    override fun setPageTitle(title: String) {
+        val toolBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+        toolBar.title = title
+    }
+
     private fun initViews() {
         val navigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         navigationView.setOnItemSelectedListener { item ->
             var fragment: Fragment? = null
             val selectTab = when(item.itemId) {
                 R.id.tab_insights -> {
+                    setPageTitle(getString(R.string.insights))
                     fragment = InsightsFragment.newInstance()
                     true
                 }
                 R.id.tab_collections -> {
-                    fragment = CollectionsFragment.newInstance()
+                    setPageTitle(getString(R.string.my_collections))
+                    fragment = CollectionHomeFragment.newInstance()
                     true
                 }
                 R.id.tab_ai_assistant -> {
                     false
                 }
                 R.id.tab_podcast -> {
+                    setPageTitle(getString(R.string.podcast))
                     fragment = PodcastFragment.newInstance()
                     true
                 }
                 R.id.tab_more -> {
+                    setPageTitle(getString(R.string.more))
                     fragment = SettingsFragment.newInstance()
                     true
                 }
@@ -54,9 +64,11 @@ class MainActivity : BaseActivity() {
             selectTab
         }
         if (supportFragmentManager.fragments.isEmpty()) {
+            setPageTitle(getString(R.string.insights))
             supportFragmentManager.beginTransaction()
                 .add(R.id.content_container, InsightsFragment.newInstance())
                 .commit()
+
         }
     }
 }

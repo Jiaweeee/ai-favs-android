@@ -17,10 +17,25 @@ data class Tag(
 )
 
 @Serializable
+data class TagOverview(
+    val id: String,
+    val name: String,
+    @SerializedName("collection_count") val collectionCount: Int = 0,
+)
+
+@Serializable
 data class Category(
     val id: String,
     val name: String,
     val description: String
+)
+
+@Serializable
+data class CategoryOverview(
+    val id: String,
+    val name: String,
+    val description: String,
+    @SerializedName("collection_count") val collectionCount: Int = 0,
 )
 
 @Serializable

@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">AIFavs</string>
-    <string name="my_collections">我的收藏</string>
+    <string name="smart_folders">Smart Folders</string>
+    <string name="tags">Tags</string>
+    <string name="insights">Insights</string>
+    <string name="my_collections">My Collections</string>
+    <string name="podcast">Podcast</string>
+    <string name="more">More</string>
 </resources>

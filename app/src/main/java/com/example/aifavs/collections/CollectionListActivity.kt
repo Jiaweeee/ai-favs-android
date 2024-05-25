@@ -20,25 +20,28 @@ import com.example.aifavs.Collection
 import com.example.aifavs.R
 import com.example.aifavs.base.BaseActivity
 import com.example.aifavs.dp2px
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 
-class ContentListActivity : BaseActivity() {
-    private val viewModel: ContentViewModel by lazy { ContentViewModel() }
+class CollectionListActivity : BaseActivity() {
+    private val viewModel: CollectionListViewModel by lazy { CollectionListViewModel() }
     private lateinit var mAdapter: ContentListAdapter
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private var categoryId: String? = null
+    private var tagId: String? = null
 
     companion object {
-        private const val KEY_TITLE = "key_title"
-        private const val KEY_CATEGORY_ID = "key_category_id"
+        const val KEY_TITLE = "key_title"
+        const val KEY_CATEGORY_ID = "key_category_id"
+        const val KEY_TAG_ID = "key_tag_id"
 
-        fun navigate(context: Context, title: String, categoryId: String? = null) {
-            val intent = Intent(context, ContentListActivity::class.java)
-            intent.putExtra(KEY_TITLE, title)
-            categoryId?.let {
-                intent.putExtra(KEY_CATEGORY_ID, categoryId)
-            }
+        fun navigate(
+            context: Context,
+            bundle: Bundle = Bundle()
+        ) {
+            val intent = Intent(context, CollectionListActivity::class.java)
+            intent.putExtras(bundle)
             context.startActivity(intent)
         }
     }
@@ -48,7 +51,8 @@ class ContentListActivity : BaseActivity() {
         setContentView(R.layout.activity_content_list)
         initView()
         categoryId = intent.getStringExtra(KEY_CATEGORY_ID)
-        viewModel.getContentList(categoryId)
+        tagId = intent.getStringExtra(KEY_TAG_ID)
+        viewModel.getContentList(categoryId, tagId)
         viewModel.contentList.observe(this) { list ->
             mAdapter.submitList(list)
             mAdapter.notifyDataSetChanged()
@@ -56,6 +60,11 @@ class ContentListActivity : BaseActivity() {
         viewModel.loading.observe(this) { isLoading ->
             mSwipeRefreshLayout.isRefreshing = isLoading
         }
+    }
+
+    override fun setPageTitle(title: String) {
+        val toolBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+        toolBar.title = title
     }
 
     private fun initView() {
@@ -67,12 +76,11 @@ class ContentListActivity : BaseActivity() {
 
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh)
         mSwipeRefreshLayout.setOnRefreshListener {
-            viewModel.getContentList(categoryId)
+            viewModel.getContentList(categoryId, tagId)
         }
 
-        val tvTitle = findViewById<TextView>(R.id.tv_title)
         val title = intent.getStringExtra(KEY_TITLE)
-        tvTitle.text = title ?: ""
+        setPageTitle(title ?: "")
     }
 }
 

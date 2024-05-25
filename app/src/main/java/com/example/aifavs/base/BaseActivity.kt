@@ -18,4 +18,7 @@ abstract class BaseActivity : AppCompatActivity() {
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightNavigationBars = true
     }
+
+    open fun setPageTitle(title: String) {
+    }
 }

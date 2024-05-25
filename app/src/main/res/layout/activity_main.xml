@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
             app:menu="@menu/top_app_bar"
-            app:title="Hello"/>
+            tools:title="Hello"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
