@@ -4,25 +4,25 @@
         android:id="@+id/tab_insights"
         android:enabled="true"
         android:icon="@drawable/ic_insights"
-        android:title="Insights" />
+        android:title="@string/insights" />
     <item
         android:id="@+id/tab_collections"
         android:enabled="true"
         android:icon="@drawable/ic_collections"
-        android:title="Collections"/>
+        android:title="@string/collections"/>
     <item
         android:id="@+id/tab_ai_assistant"
         android:enabled="true"
         android:icon="@drawable/ic_ai_star"
-        android:title="AI"/>
+        android:title="@string/assistant"/>
     <item
         android:id="@+id/tab_podcast"
         android:enabled="true"
         android:icon="@drawable/ic_podcast"
-        android:title="Podcast"/>
+        android:title="@string/podcast"/>
     <item
         android:id="@+id/tab_more"
         android:enabled="true"
         android:icon="@drawable/ic_more"
-        android:title="More"/>
+        android:title="@string/more"/>
 </menu>

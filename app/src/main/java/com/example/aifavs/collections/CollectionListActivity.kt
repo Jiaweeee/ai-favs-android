@@ -10,6 +10,7 @@ import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -25,7 +26,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 
 class CollectionListActivity : BaseActivity() {
-    private val viewModel: CollectionListViewModel by lazy { CollectionListViewModel() }
+    private lateinit var viewModel: CollectionListViewModel
     private lateinit var mAdapter: ContentListAdapter
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private var categoryId: String? = null
@@ -50,6 +51,7 @@ class CollectionListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_content_list)
         initView()
+        viewModel = ViewModelProvider(this)[CollectionListViewModel::class.java]
         categoryId = intent.getStringExtra(KEY_CATEGORY_ID)
         tagId = intent.getStringExtra(KEY_TAG_ID)
         viewModel.getContentList(categoryId, tagId)
@@ -118,56 +120,56 @@ class ContentListAdapter: BaseQuickAdapter<Collection, QuickViewHolder>() {
             .error(R.drawable.pic_placeholder)
             .into(ivThumbnail)
 
-        val labelContainer = holder.getView<HorizontalScrollView>(R.id.labels_container)
-        if (item.tags != null) {
-            labelContainer.visibility = View.VISIBLE
-            val labelsView = holder.getView<ChipGroup>(R.id.labels)
-            labelsView.removeAllViews()
-            for (tag in item.tags) {
-                labelsView.addView(createChip(tag.name, context))
-            }
-        } else {
-            labelContainer.visibility = View.GONE
-        }
-
-        val ivMore = holder.getView<ImageView>(R.id.iv_more)
-        if (item.summary == null) {
-            ivMore.visibility = View.GONE
-        } else {
-            ivMore.visibility = View.VISIBLE
-            bindSummary(item.summary, holder)
-            val aiContentBlocks = holder.getView<LinearLayout>(R.id.ai_content_blocks)
-            ivMore.setOnClickListener {
-                if (aiContentBlocks.visibility == View.GONE) {
-                    aiContentBlocks.visibility = View.VISIBLE
-                    ivMore.setImageResource(R.drawable.ic_arrow_down)
-                } else {
-                    aiContentBlocks.visibility = View.GONE
-                    ivMore.setImageResource(R.drawable.ic_arrow_right)
-                }
-            }
-        }
+//        val labelContainer = holder.getView<HorizontalScrollView>(R.id.labels_container)
+//        if (item.tags != null) {
+//            labelContainer.visibility = View.VISIBLE
+//            val labelsView = holder.getView<ChipGroup>(R.id.labels)
+//            labelsView.removeAllViews()
+//            for (tag in item.tags) {
+//                labelsView.addView(createChip(tag.name, context))
+//            }
+//        } else {
+//            labelContainer.visibility = View.GONE
+//        }
+//
+//        val ivMore = holder.getView<ImageView>(R.id.iv_more)
+//        if (item.summary == null) {
+//            ivMore.visibility = View.GONE
+//        } else {
+//            ivMore.visibility = View.VISIBLE
+//            bindSummary(item.summary, holder)
+//            val aiContentBlocks = holder.getView<LinearLayout>(R.id.ai_content_blocks)
+//            ivMore.setOnClickListener {
+//                if (aiContentBlocks.visibility == View.GONE) {
+//                    aiContentBlocks.visibility = View.VISIBLE
+//                    ivMore.setImageResource(R.drawable.ic_arrow_down)
+//                } else {
+//                    aiContentBlocks.visibility = View.GONE
+//                    ivMore.setImageResource(R.drawable.ic_arrow_right)
+//                }
+//            }
+//        }
     }
 
-    private fun createChip(text: String, context: Context): Chip {
-        val chip = Chip(context)
-        chip.text = text
-        return chip
-    }
-
-    private fun bindSummary(summary: String?, holder: QuickViewHolder) {
-        val blockView = holder.getView<LinearLayout>(R.id.block_ai_summary)
-        if (summary == null) {
-            blockView.visibility = View.GONE
-            return
-        } else {
-            blockView.visibility = View.VISIBLE
-        }
-        val tvTitle = blockView.findViewById<TextView>(R.id.tv_title)
-        tvTitle.text = "AI Summary"
-        val tvContent = blockView.findViewById<TextView>(R.id.tv_content)
-        tvContent.text = summary
-    }
+//    private fun createChip(text: String, context: Context): Chip {
+//        val chip = Chip(context)
+//        chip.text = text
+//        return chip
+//    }
+//
+//    private fun bindSummary(summary: String?, holder: QuickViewHolder) {
+//        val blockView = holder.getView<LinearLayout>(R.id.block_ai_summary)
+//        if (summary == null) {
+//            blockView.visibility = View.GONE
+//            return
+//        } else {
+//            blockView.visibility = View.VISIBLE
+//        }
+//        val tvTitle = blockView.findViewById<TextView>(R.id.tv_title)
+//        tvTitle.text = "AI Summary"
+//        val tvContent = blockView.findViewById<TextView>(R.id.tv_content)
+//        tvContent.text = summary
+//    }
 
     override fun onCreateViewHolder(
         context: Context,

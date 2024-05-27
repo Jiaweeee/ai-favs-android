@@ -4,6 +4,9 @@
     <string name="tags">Tags</string>
     <string name="insights">Insights</string>
     <string name="my_collections">My Collections</string>
+    <string name="collections">Collections</string>
     <string name="podcast">Podcast</string>
     <string name="more">More</string>
+    <string name="assistant">Assistant</string>
+    <string name="hint_enter_url">Enter url</string>
 </resources>

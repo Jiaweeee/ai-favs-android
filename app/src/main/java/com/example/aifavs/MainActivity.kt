@@ -1,7 +1,9 @@
 package com.example.aifavs
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.aifavs.assistant.AssistantActivity
 import com.example.aifavs.base.BaseActivity
 import com.example.aifavs.collections.CollectionHomeFragment
@@ -10,17 +12,34 @@ import com.example.aifavs.podcast.PodcastFragment
 import com.example.aifavs.settings.SettingsFragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
 
 class MainActivity : BaseActivity() {
+    private lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         initViews()
+        viewModel.loading.observe(this) {
+            showLoading(it)
+        }
     }
 
     override fun setPageTitle(title: String) {
         val toolBar = findViewById<MaterialToolbar>(R.id.topAppBar)
         toolBar.title = title
+        toolBar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.add -> {
+                    showAddCollectionDialog()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun initViews() {
@@ -70,5 +89,22 @@ class MainActivity : BaseActivity() {
                 .commit()
 
         }
+    }
+
+    private fun showAddCollectionDialog() {
+        val customView = LayoutInflater.from(this).inflate(R.layout.layout_url_input_dialog, null)
+        val editText = customView.findViewById<TextInputEditText>(R.id.edit_text)
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setTitle("Add Collection")
+            .setView(customView)
+            .setPositiveButton("OK") { _, _ ->
+                viewModel.addCollection(editText.text.toString())
+            }
+            .setNegativeButton("Cancel") { dialogInterface, _ ->
+                dialogInterface.dismiss()
+            }
+            .create()
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
     }
 }
