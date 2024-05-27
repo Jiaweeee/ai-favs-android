@@ -16,9 +16,7 @@ interface RemoteApi {
         @Query("tag_id") tagId: String? = null
     ): Observable<BaseResponse<List<Collection>>>
 
-    @GET("category/list/get")
-    fun getCategories(): Observable<BaseResponse<List<CategoryOverview>>>
 
-    @GET("tag/list/get")
-    fun getTags(): Observable<BaseResponse<List<TagOverview>>>
+    @GET("/collection/overview")
+    fun getCollectionOverview(): Observable<BaseResponse<CollectionOverviewResponse>>
 }
