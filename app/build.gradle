@@ -36,6 +36,7 @@ android {
 
     buildFeatures {
         buildConfig true
+        viewBinding true
     }
 
     buildTypes {
@@ -64,6 +65,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation 'com.squareup.okhttp3:okhttp-sse:4.9.3'
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxjava:2.2.21'

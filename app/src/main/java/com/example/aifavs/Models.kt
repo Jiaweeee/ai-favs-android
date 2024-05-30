@@ -61,3 +61,9 @@ data class Collection(
 data class AddContentRequestBody(
     val url: String
 )
+
+@Serializable
+data class ChatRequestBody(
+    val input: String,
+    @SerializedName("chat_history") val history: List<String>? = null
+)

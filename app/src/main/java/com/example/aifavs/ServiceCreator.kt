@@ -22,7 +22,7 @@ object ServiceCreator {
         okHttpClient
             .connectTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(httpLoggingInterceptor)
             .dispatcher(dispatcher)
         builder.client(okHttpClient.build()).build()

@@ -5,5 +5,6 @@
         <item name="colorOnSurface">@color/color_on_surface</item>
         <item name="colorOnSurfaceVariant">@color/color_on_surface_variant</item>
         <item name="colorSurfaceContainerLowest">@color/color_surface_container_lowest</item>
+        <item name="colorPrimary">@color/color_774DF2</item>
     </style>
 </resources>
