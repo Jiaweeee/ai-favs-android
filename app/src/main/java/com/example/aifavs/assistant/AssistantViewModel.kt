@@ -73,6 +73,7 @@ class AssistantViewModel: ViewModel() {
             override fun onError(t: Throwable?) {
                 t?.printStackTrace()
                 postEvent(StreamingEvent.Error(msg = "Network Error"))
+                _waiting.postValue(false)
             }
         })
     }
