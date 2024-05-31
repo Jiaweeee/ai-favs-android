@@ -9,24 +9,27 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ServiceCreator {
-    private val okHttpClient by lazy { OkHttpClient().newBuilder() }
     private val retrofit: Retrofit by lazy {
         val builder = Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        builder.client(createOkHttpClient()).build()
+    }
+
+    fun <T> create(clazz: Class<T>): T = retrofit.create(clazz)
+
+    fun createOkHttpClient(): OkHttpClient {
         val dispatcher = Dispatcher()
-        dispatcher.maxRequests = 1
+        dispatcher.maxRequests = 8
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        okHttpClient
+        return OkHttpClient().newBuilder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(httpLoggingInterceptor)
             .dispatcher(dispatcher)
-        builder.client(okHttpClient.build()).build()
+            .build()
     }
-
-    fun <T> create(clazz: Class<T>): T = retrofit.create(clazz)
 }

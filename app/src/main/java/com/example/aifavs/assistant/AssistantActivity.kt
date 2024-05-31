@@ -50,7 +50,7 @@ class AssistantActivity : BaseViewBindingActivity<ActivityAssistantBinding>() {
             buttonSend.setOnClickListener {
                 val text = editGchatMessage.text.toString()
                 if (!TextUtils.isEmpty(text)) {
-                    viewModel.startChat(text)
+                    viewModel.startChat(text, messageListAdapter.items)
                     with(messageListAdapter) {
                         appendHumanMessage(text)
                         appendAIMessage()

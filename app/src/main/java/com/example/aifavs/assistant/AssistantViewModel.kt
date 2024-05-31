@@ -52,8 +52,8 @@ class AssistantViewModel: ViewModel() {
     private val chatStreamHandler = ChatStreamHandler()
     private val gson = Gson()
 
-    fun startChat(input: String) {
-        chatStreamHandler.startChatStream(input, object : ChatStreamHandler.ChatStreamCallback {
+    fun startChat(input: String, messages: List<ChatMessage> = emptyList()) {
+        chatStreamHandler.startChatStream(input, messages, object : ChatStreamHandler.ChatStreamCallback {
             override fun onNewMessage(message: String) {
                 Log.w(TAG, message)
                 val event: StreamingEvent? = parseEvent(message)

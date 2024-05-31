@@ -8,17 +8,14 @@ import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.example.aifavs.R
 
-sealed class Message(val type: String) {
-    data class Human(val content: String): Message("human")
-    data class AI(var content: String): Message("ai")
-}
 
-class MessageListAdapter: BaseQuickAdapter<Message, MessageViewHolder>() {
+
+class MessageListAdapter: BaseQuickAdapter<ChatMessage, MessageViewHolder>() {
     companion object {
         private const val VIEW_TYPE_HUMAN_MSG = 1
         private const val VIEW_TYPE_AI_MSG = 2
     }
-    override fun onBindViewHolder(holder: MessageViewHolder, position: Int, item: Message?) {
+    override fun onBindViewHolder(holder: MessageViewHolder, position: Int, item: ChatMessage?) {
         if (item != null) {
             holder.bind(item)
         }
@@ -36,9 +33,9 @@ class MessageListAdapter: BaseQuickAdapter<Message, MessageViewHolder>() {
         }
     }
 
-    override fun getItemViewType(position: Int, list: List<Message>): Int {
+    override fun getItemViewType(position: Int, list: List<ChatMessage>): Int {
         val message = list[position]
-        return if (message is Message.Human) {
+        return if (message is ChatMessage.Human) {
             VIEW_TYPE_HUMAN_MSG
         } else {
             VIEW_TYPE_AI_MSG
@@ -46,19 +43,19 @@ class MessageListAdapter: BaseQuickAdapter<Message, MessageViewHolder>() {
     }
 
     fun appendHumanMessage(text: String) {
-        add(Message.Human(text))
+        add(ChatMessage.Human(text))
         scrollToBottom()
     }
 
     fun appendAIMessage(text: String = "") {
-        add(Message.AI(text))
+        add(ChatMessage.AI(text))
         scrollToBottom()
     }
 
     fun onStreamingEvent(event: StreamingEvent) {
         val position = itemCount - 1
         val latestMessage = getItem(position)
-        if (latestMessage is Message.AI) {
+        if (latestMessage is ChatMessage.AI) {
             when (event) {
                 is StreamingEvent.LLMStreaming -> {
                     latestMessage.content += event.content
@@ -91,15 +88,15 @@ class MessageListAdapter: BaseQuickAdapter<Message, MessageViewHolder>() {
 }
 
 abstract class MessageViewHolder(@LayoutRes resId: Int, parent: ViewGroup): QuickViewHolder(resId, parent) {
-    abstract fun bind(message: Message)
+    abstract fun bind(message: ChatMessage)
 }
 
 class HumanMessageViewHolder(parent: ViewGroup): MessageViewHolder(
     resId = R.layout.layout_chat_msg_sent,
     parent = parent
 ) {
-    override fun bind(message: Message) {
-        if (message is Message.Human) {
+    override fun bind(message: ChatMessage) {
+        if (message is ChatMessage.Human) {
             getView<TextView>(R.id.text_gchat_message_me).text = message.content
         }
     }
@@ -109,8 +106,8 @@ class AIMessageViewHolder(parent: ViewGroup): MessageViewHolder(
     resId = R.layout.layout_chat_msg_received,
     parent = parent
 ) {
-    override fun bind(message: Message) {
-        if (message is Message.AI) {
+    override fun bind(message: ChatMessage) {
+        if (message is ChatMessage.AI) {
             getView<TextView>(R.id.text_gchat_user_other).text = "Assistant"
             getView<TextView>(R.id.text_gchat_message_other).text = message.content
         }

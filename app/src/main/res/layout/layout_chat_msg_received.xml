@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginStart="8dp"
+    android:layout_marginStart="16dp"
     android:layout_marginTop="16dp"
     tools:background="?attr/colorSurface">
 
@@ -12,7 +12,6 @@
         android:id="@+id/image_gchat_profile_other"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="16dp"
         android:src="@drawable/ic_ai_star_primary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -2,11 +2,9 @@ package com.example.aifavs.assistant
 
 import android.util.Log
 import com.example.aifavs.BuildConfig
-import com.example.aifavs.ChatRequestBody
 import com.example.aifavs.ServiceCreator
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
@@ -17,12 +15,12 @@ import okhttp3.sse.EventSources
 class ChatStreamHandler {
     private val TAG = "ChatStreamHandler"
 
-    private val client = OkHttpClient()
+    private val client by lazy { ServiceCreator.createOkHttpClient() }
     private var eventSource: EventSource? = null
 
-    fun startChatStream(input: String, callback: ChatStreamCallback) {
+    fun startChatStream(input: String, messages: List<ChatMessage> = emptyList(), callback: ChatStreamCallback) {
         val url = "${BuildConfig.BASE_URL}/chat/stream"
-        val jsonStr = Gson().toJson(ChatRequestBody(input))
+        val jsonStr = Gson().toJson(ChatRequestBody(input, history = messages))
         val mediaTypeStr = "application/json; charset=utf-8"
         val body = jsonStr.toRequestBody(mediaTypeStr.toMediaType())
         val request = Request.Builder()
