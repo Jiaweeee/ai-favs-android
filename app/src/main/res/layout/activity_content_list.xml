@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="16dp"
     android:background="@color/color_surface">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -38,6 +37,7 @@
             android:id="@+id/rv_content_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:paddingHorizontal="16dp"
             tools:itemCount="1"
             tools:listitem="@layout/layout_content_list_item"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

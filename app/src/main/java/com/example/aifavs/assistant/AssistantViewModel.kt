@@ -53,6 +53,7 @@ class AssistantViewModel: ViewModel() {
     private val gson = Gson()
 
     fun startChat(input: String, messages: List<ChatMessage> = emptyList()) {
+        _waiting.postValue(true)
         chatStreamHandler.startChatStream(input, messages, object : ChatStreamHandler.ChatStreamCallback {
             override fun onNewMessage(message: String) {
                 Log.w(TAG, message)
