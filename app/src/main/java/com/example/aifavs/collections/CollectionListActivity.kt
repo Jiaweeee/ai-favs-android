@@ -19,6 +19,7 @@ import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.example.aifavs.Collection
 import com.example.aifavs.R
+import com.example.aifavs.WebViewActivity
 import com.example.aifavs.base.BaseActivity
 import com.example.aifavs.dp2px
 import com.google.android.material.appbar.MaterialToolbar
@@ -120,6 +121,9 @@ class ContentListAdapter: BaseQuickAdapter<Collection, QuickViewHolder>() {
             .error(R.drawable.pic_placeholder)
             .into(ivThumbnail)
 
+        holder.itemView.setOnClickListener {
+            WebViewActivity.openUrl(context, item.url)
+        }
 //        val labelContainer = holder.getView<HorizontalScrollView>(R.id.labels_container)
 //        if (item.tags != null) {
 //            labelContainer.visibility = View.VISIBLE
