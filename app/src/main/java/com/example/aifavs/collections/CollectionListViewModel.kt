@@ -23,7 +23,7 @@ class CollectionListViewModel: ViewModel() {
         tagId: String? = null
     ) {
         loading.value = true
-        val disposable = remoteApi.getContentList(categoryId, tagId)
+        val disposable = remoteApi.getCollectionList(categoryId, tagId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally {

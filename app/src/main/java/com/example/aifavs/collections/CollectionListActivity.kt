@@ -1,14 +1,13 @@
 package com.example.aifavs.collections
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.HorizontalScrollView
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,13 +19,12 @@ import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.example.aifavs.Collection
 import com.example.aifavs.R
 import com.example.aifavs.WebViewActivity
-import com.example.aifavs.base.BaseActivity
+import com.example.aifavs.base.BaseViewBindingActivity
+import com.example.aifavs.databinding.ActivityCollectionListBinding
 import com.example.aifavs.dp2px
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
+import com.google.android.material.snackbar.Snackbar
 
-class CollectionListActivity : BaseActivity() {
+class CollectionListActivity : BaseViewBindingActivity<ActivityCollectionListBinding>() {
     private lateinit var viewModel: CollectionListViewModel
     private lateinit var mAdapter: ContentListAdapter
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
@@ -48,9 +46,9 @@ class CollectionListActivity : BaseActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_content_list)
         initView()
         viewModel = ViewModelProvider(this)[CollectionListViewModel::class.java]
         categoryId = intent.getStringExtra(KEY_CATEGORY_ID)
@@ -66,20 +64,40 @@ class CollectionListActivity : BaseActivity() {
     }
 
     override fun setPageTitle(title: String) {
-        val toolBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+        val toolBar = binding.topAppBar
         toolBar.title = title
     }
 
     private fun initView() {
-        val rvContentList = findViewById<RecyclerView>(R.id.rv_content_list)
-        mAdapter = ContentListAdapter()
-        rvContentList.layoutManager = LinearLayoutManager(this)
-        rvContentList.addItemDecoration(BottomMarginDecoration(16f))
-        rvContentList.adapter = mAdapter
+        with (binding) {
+            mAdapter = ContentListAdapter()
+            mAdapter.setOnItemClickListener {adapter, _, position ->
+                val item = adapter.getItem(position)
+                item?.url?.let {
+                    WebViewActivity.openUrl(adapter.context, it)
+                }
+            }
+            mAdapter.setOnItemLongClickListener { adapter, _, position ->
+                val item = adapter.getItem(position)
+                item?.let {
+                    // TODO: display action options
+                    Snackbar.make(root, "Long clicked on item ${item.title}", Snackbar.LENGTH_LONG)
+                        .setAction("Action") {
 
-        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh)
-        mSwipeRefreshLayout.setOnRefreshListener {
-            viewModel.getContentList(categoryId, tagId)
+                        }
+                        .show()
+
+                }
+                item != null
+            }
+            rvContentList.layoutManager = LinearLayoutManager(this@CollectionListActivity)
+            rvContentList.addItemDecoration(BottomMarginDecoration(16f))
+            rvContentList.adapter = mAdapter
+
+            mSwipeRefreshLayout = swipeRefresh
+            mSwipeRefreshLayout.setOnRefreshListener {
+                viewModel.getContentList(categoryId, tagId)
+            }
         }
 
         val title = intent.getStringExtra(KEY_TITLE)
@@ -121,9 +139,6 @@ class ContentListAdapter: BaseQuickAdapter<Collection, QuickViewHolder>() {
             .error(R.drawable.pic_placeholder)
             .into(ivThumbnail)
 
-        holder.itemView.setOnClickListener {
-            WebViewActivity.openUrl(context, item.url)
-        }
 //        val labelContainer = holder.getView<HorizontalScrollView>(R.id.labels_container)
 //        if (item.tags != null) {
 //            labelContainer.visibility = View.VISIBLE

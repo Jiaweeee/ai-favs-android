@@ -61,3 +61,20 @@ data class Collection(
 data class AddContentRequestBody(
     val url: String
 )
+
+@Serializable
+data class CreatePodcastRequestBody(
+    @SerializedName("collection_id") val collectionId: String
+)
+
+@Serializable
+data class PodcastInfo(
+    val title: String,
+    val status: Int,
+    @SerializedName("file_path") val filePath: String? = null,
+    val transcript: String? = null,
+    @SerializedName("collection_id") val collectionId: String,
+    @SerializedName("collection_url") val collectionUrl: String,
+) {
+    fun audioUrl() = "${BuildConfig.BASE_URL}$filePath"
+}

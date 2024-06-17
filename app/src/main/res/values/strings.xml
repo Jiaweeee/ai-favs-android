@@ -9,4 +9,7 @@
     <string name="more">More</string>
     <string name="assistant">Assistant</string>
     <string name="hint_enter_url">Enter url</string>
+    <string name="podcast_status_generating">Generating</string>
+    <string name="podcast_status_ready">Ready</string>
+    <string name="podcast_status_error">Error</string>
 </resources>

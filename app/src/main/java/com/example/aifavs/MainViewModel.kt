@@ -20,7 +20,7 @@ class MainViewModel: ViewModel() {
             return // TODO: validate the url
         }
         loading.value = true
-        val disposable = remoteApi.addContent(AddContentRequestBody(url))
+        val disposable = remoteApi.addCollection(AddContentRequestBody(url))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally {

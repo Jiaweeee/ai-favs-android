@@ -4,12 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.http.SslError
 import android.os.Bundle
 import android.view.View
-import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
-import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.example.aifavs.base.BaseViewBindingActivity
@@ -36,7 +33,6 @@ class WebViewActivity: BaseViewBindingActivity<ActivityWebViewBinding>() {
         with(webView) {
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
-            settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
             webViewClient = object : WebViewClient() {
                 @Deprecated("Deprecated in Java")
                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
