@@ -43,10 +43,6 @@ class PodcastFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PodcastListAdapter
 
-    companion object {
-        fun newInstance() = PodcastFragment()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

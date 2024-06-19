@@ -8,7 +8,9 @@ data class BaseResponse<T>(
     val code: Int,
     val msg: String?,
     val data: T?
-)
+) {
+    fun isSuccess() = code == 200
+}
 
 @Serializable
 data class Tag(
@@ -55,6 +57,7 @@ data class Collection(
     val tags: List<Tag>?,
     val summary: String?,
     val highlights: List<String>?,
+    @SerializedName("podcast_id") val podcastId: String?,
 )
 
 @Serializable

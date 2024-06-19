@@ -2,7 +2,6 @@ package com.example.aifavs.collections
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
@@ -17,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.example.aifavs.Collection
+import com.example.aifavs.MainActivity
 import com.example.aifavs.R
 import com.example.aifavs.WebViewActivity
 import com.example.aifavs.base.BaseViewBindingActivity
@@ -35,15 +35,6 @@ class CollectionListActivity : BaseViewBindingActivity<ActivityCollectionListBin
         const val KEY_TITLE = "key_title"
         const val KEY_CATEGORY_ID = "key_category_id"
         const val KEY_TAG_ID = "key_tag_id"
-
-        fun navigate(
-            context: Context,
-            bundle: Bundle = Bundle()
-        ) {
-            val intent = Intent(context, CollectionListActivity::class.java)
-            intent.putExtras(bundle)
-            context.startActivity(intent)
-        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -58,14 +49,12 @@ class CollectionListActivity : BaseViewBindingActivity<ActivityCollectionListBin
             mAdapter.submitList(list)
             mAdapter.notifyDataSetChanged()
         }
-        viewModel.loading.observe(this) { isLoading ->
-            mSwipeRefreshLayout.isRefreshing = isLoading
+        viewModel.refreshingList.observe(this) {
+            mSwipeRefreshLayout.isRefreshing = it
         }
-    }
-
-    override fun setPageTitle(title: String) {
-        val toolBar = binding.topAppBar
-        toolBar.title = title
+        viewModel.loading.observe(this) {
+            showLoading(it)
+        }
     }
 
     private fun initView() {
@@ -80,13 +69,8 @@ class CollectionListActivity : BaseViewBindingActivity<ActivityCollectionListBin
             mAdapter.setOnItemLongClickListener { adapter, _, position ->
                 val item = adapter.getItem(position)
                 item?.let {
-                    // TODO: display action options
-                    Snackbar.make(root, "Long clicked on item ${item.title}", Snackbar.LENGTH_LONG)
-                        .setAction("Action") {
-
-                        }
-                        .show()
-
+                    val bottomSheet = MultiOptionModalBottomSheet(createBottomSheetOptions(it))
+                    bottomSheet.show(supportFragmentManager)
                 }
                 item != null
             }
@@ -101,7 +85,45 @@ class CollectionListActivity : BaseViewBindingActivity<ActivityCollectionListBin
         }
 
         val title = intent.getStringExtra(KEY_TITLE)
-        setPageTitle(title ?: "")
+        binding.topAppBar.title = title
+    }
+
+    private fun createBottomSheetOptions(collection: Collection): List<Option> {
+        val createPodcastOption = Option(
+            name = "Generate Podcast",
+            icon = R.drawable.ic_podcast_color_on_surface
+        ) {
+            viewModel.createPodcast(collection.id) {
+                Snackbar.make(binding.root, "Generating Podcast...", Snackbar.LENGTH_LONG)
+                    .setAction("View") {
+                        val bundle = Bundle()
+                        bundle.putInt(MainActivity.KEY_DEST, R.id.tab_podcast)
+                        MainActivity.navigate(this@CollectionListActivity, bundle)
+                        finish()
+                    }
+                    .show()
+            }
+        }
+        val playPodcastOption = Option(
+            name = "Play Podcast",
+            icon = R.drawable.ic_play_circle
+        ) {
+            // TODO: play the podcast
+        }
+        val showSummaryOption = Option(
+            name = "Show AI Summary",
+            icon = R.drawable.ic_ai_star_color_on_surface
+        ) {
+            // TODO: show AI summary
+        }
+        val options = mutableListOf<Option>()
+        options.add(showSummaryOption)
+        if (collection.podcastId == null) {
+            options.add(createPodcastOption)
+        } else {
+            options.add(playPodcastOption)
+        }
+        return options
     }
 }
 
@@ -138,57 +160,7 @@ class ContentListAdapter: BaseQuickAdapter<Collection, QuickViewHolder>() {
             .placeholder(R.drawable.pic_placeholder)
             .error(R.drawable.pic_placeholder)
             .into(ivThumbnail)
-
-//        val labelContainer = holder.getView<HorizontalScrollView>(R.id.labels_container)
-//        if (item.tags != null) {
-//            labelContainer.visibility = View.VISIBLE
-//            val labelsView = holder.getView<ChipGroup>(R.id.labels)
-//            labelsView.removeAllViews()
-//            for (tag in item.tags) {
-//                labelsView.addView(createChip(tag.name, context))
-//            }
-//        } else {
-//            labelContainer.visibility = View.GONE
-//        }
-//
-//        val ivMore = holder.getView<ImageView>(R.id.iv_more)
-//        if (item.summary == null) {
-//            ivMore.visibility = View.GONE
-//        } else {
-//            ivMore.visibility = View.VISIBLE
-//            bindSummary(item.summary, holder)
-//            val aiContentBlocks = holder.getView<LinearLayout>(R.id.ai_content_blocks)
-//            ivMore.setOnClickListener {
-//                if (aiContentBlocks.visibility == View.GONE) {
-//                    aiContentBlocks.visibility = View.VISIBLE
-//                    ivMore.setImageResource(R.drawable.ic_arrow_down)
-//                } else {
-//                    aiContentBlocks.visibility = View.GONE
-//                    ivMore.setImageResource(R.drawable.ic_arrow_right)
-//                }
-//            }
-//        }
     }
-
-//    private fun createChip(text: String, context: Context): Chip {
-//        val chip = Chip(context)
-//        chip.text = text
-//        return chip
-//    }
-//
-//    private fun bindSummary(summary: String?, holder: QuickViewHolder) {
-//        val blockView = holder.getView<LinearLayout>(R.id.block_ai_summary)
-//        if (summary == null) {
-//            blockView.visibility = View.GONE
-//            return
-//        } else {
-//            blockView.visibility = View.VISIBLE
-//        }
-//        val tvTitle = blockView.findViewById<TextView>(R.id.tv_title)
-//        tvTitle.text = "AI Summary"
-//        val tvContent = blockView.findViewById<TextView>(R.id.tv_content)
-//        tvContent.text = summary
-//    }
 
     override fun onCreateViewHolder(
         context: Context,

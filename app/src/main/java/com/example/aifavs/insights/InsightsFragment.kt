@@ -10,10 +10,6 @@ import com.example.aifavs.R
 
 class InsightsFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = InsightsFragment()
-    }
-
     private lateinit var viewModel: InsightsViewModel
 
     override fun onCreateView(

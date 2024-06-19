@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -23,10 +24,6 @@ class CollectionHomeFragment : Fragment() {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var foldersContainer: View
     private lateinit var tagsContainer: View
-
-    companion object {
-        fun newInstance() = CollectionHomeFragment()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,11 +64,29 @@ class CollectionHomeFragment : Fragment() {
         rvFolders.layoutManager = LinearLayoutManager(context)
         foldersAdapter = Adapter()
         rvFolders.adapter = foldersAdapter
+        foldersAdapter.setOnItemClickListener { adapter, _, position ->
+            val item = adapter.getItem(position)
+            item?.let {
+                val bundle = Bundle()
+                bundle.putString(CollectionListActivity.KEY_TITLE, item.name)
+                bundle.putString(CollectionListActivity.KEY_CATEGORY_ID, item.id)
+                findNavController().navigate(R.id.collectionListActivity, bundle)
+            }
+        }
 
         val rvTags = root.findViewById<RecyclerView>(R.id.rv_tags)
         rvTags.layoutManager = LinearLayoutManager(context)
         tagsAdapter = Adapter()
         rvTags.adapter = tagsAdapter
+        tagsAdapter.setOnItemClickListener { adapter, _, position ->
+            val item = adapter.getItem(position)
+            item?.let {
+                val bundle = Bundle()
+                bundle.putString(CollectionListActivity.KEY_TITLE, item.name)
+                bundle.putString(CollectionListActivity.KEY_TAG_ID, item.id)
+                findNavController().navigate(R.id.collectionListActivity, bundle)
+            }
+        }
 
         swipeRefreshLayout = root.findViewById(R.id.swipe_refresh)
         swipeRefreshLayout.setOnRefreshListener {
@@ -93,16 +108,6 @@ class Adapter : BaseQuickAdapter<DisplayItem, QuickViewHolder>() {
         when (item.type) {
             ItemType.FOLDER -> ivIcon.setImageResource(R.drawable.ic_folder)
             ItemType.TAG -> ivIcon.setImageResource(R.drawable.ic_tag)
-        }
-        holder.itemView.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString(CollectionListActivity.KEY_TITLE, item.name)
-            val idKey = when (item.type) {
-                ItemType.FOLDER -> CollectionListActivity.KEY_CATEGORY_ID
-                ItemType.TAG -> CollectionListActivity.KEY_TAG_ID
-            }
-            bundle.putString(idKey, item.id)
-            CollectionListActivity.navigate(context, bundle)
         }
     }
 

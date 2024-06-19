@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 def getProperty(String fileName, String propName) {
@@ -76,7 +77,7 @@ dependencies {
     // Kotlin serialization
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1'
 
-    // BRVAH
+    // BaseRecyclerViewAdapterHelper4
     implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.4"
 
     // Glide
@@ -85,6 +86,10 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+
+    // Jetpack Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
 
     // Testing
     testImplementation 'junit:junit:4.13.2'

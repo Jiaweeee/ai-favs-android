@@ -24,9 +24,6 @@ abstract class BaseActivity : AppCompatActivity() {
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightNavigationBars = true
     }
 
-    open fun setPageTitle(title: String) {
-    }
-
     private fun addLoadingView(): View {
         val view = layoutInflater.inflate(R.layout.layout_loading_indicator, null)
         val layoutParams = FrameLayout.LayoutParams(

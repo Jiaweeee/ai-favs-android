@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/tab_insights"
-        android:enabled="true"
+        android:id="@id/tab_insights"
         android:icon="@drawable/ic_insights"
         android:title="@string/insights" />
     <item
-        android:id="@+id/tab_collections"
-        android:enabled="true"
+        android:id="@id/tab_collections"
         android:icon="@drawable/ic_collections"
         android:title="@string/collections"/>
     <item
-        android:id="@+id/tab_ai_assistant"
-        android:enabled="true"
+        android:id="@id/tab_ai_assistant"
         android:icon="@drawable/ic_ai_star"
         android:title="@string/assistant"/>
     <item
-        android:id="@+id/tab_podcast"
-        android:enabled="true"
+        android:id="@id/tab_podcast"
         android:icon="@drawable/ic_podcast"
         android:title="@string/podcast"/>
     <item
-        android:id="@+id/tab_more"
-        android:enabled="true"
+        android:id="@id/tab_more"
         android:icon="@drawable/ic_more"
         android:title="@string/more"/>
 </menu>

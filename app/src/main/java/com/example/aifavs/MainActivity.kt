@@ -1,15 +1,20 @@
 package com.example.aifavs
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.fragment.app.Fragment
+import android.view.Menu
+import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
-import com.example.aifavs.assistant.AssistantActivity
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.aifavs.base.BaseActivity
-import com.example.aifavs.collections.CollectionHomeFragment
-import com.example.aifavs.insights.InsightsFragment
-import com.example.aifavs.podcast.PodcastFragment
-import com.example.aifavs.settings.SettingsFragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -17,78 +22,74 @@ import com.google.android.material.textfield.TextInputEditText
 
 class MainActivity : BaseActivity() {
     private lateinit var viewModel: MainViewModel
+    private lateinit var appBarConfiguration : AppBarConfiguration
+
+    companion object {
+        const val KEY_DEST = "destination"
+
+        fun navigate(context: Context, bundle: Bundle = Bundle()) {
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtras(bundle)
+            context.startActivity(intent)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initNav()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        initViews()
         viewModel.loading.observe(this) {
             showLoading(it)
         }
     }
 
-    override fun setPageTitle(title: String) {
-        val toolBar = findViewById<MaterialToolbar>(R.id.topAppBar)
-        toolBar.title = title
-        toolBar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.add -> {
-                    showAddCollectionDialog()
-                    true
-                }
-                else -> false
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val destination = intent?.getIntExtra(KEY_DEST, R.id.tab_insights) ?: return
+        val navController = findNavController(R.id.nav_host_fragment)
+        val navOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.nav_main_activity, true)
+            .build()
+        navController.navigate(destination,null, navOptions)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_app_bar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.add -> {
+                showAddCollectionDialog()
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun initViews() {
-        val navigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        navigationView.setOnItemSelectedListener { item ->
-            var fragment: Fragment? = null
-            val selectTab = when(item.itemId) {
-                R.id.tab_insights -> {
-                    setPageTitle(getString(R.string.insights))
-                    fragment = InsightsFragment.newInstance()
-                    true
-                }
-                R.id.tab_collections -> {
-                    setPageTitle(getString(R.string.my_collections))
-                    fragment = CollectionHomeFragment.newInstance()
-                    true
-                }
-                R.id.tab_ai_assistant -> {
-                    false
-                }
-                R.id.tab_podcast -> {
-                    setPageTitle(getString(R.string.podcast))
-                    fragment = PodcastFragment.newInstance()
-                    true
-                }
-                R.id.tab_more -> {
-                    setPageTitle(getString(R.string.more))
-                    fragment = SettingsFragment.newInstance()
-                    true
-                }
-                else -> false
-            }
-            fragment?.let {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.content_container, it)
-                    .commit()
-            }
-            if (item.itemId == R.id.tab_ai_assistant) {
-                AssistantActivity.navigate(this)
-            }
-            selectTab
-        }
-        if (supportFragmentManager.fragments.isEmpty()) {
-            setPageTitle(getString(R.string.insights))
-            supportFragmentManager.beginTransaction()
-                .add(R.id.content_container, InsightsFragment.newInstance())
-                .commit()
+    private fun initNav() {
+        val toolBar = findViewById<MaterialToolbar>(R.id.tool_bar)
+        setSupportActionBar(toolBar)
 
-        }
+        val host: NavHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment? ?: return
+
+        val navController = host.navController
+        appBarConfiguration = AppBarConfiguration(topLevelDestinationIds = setOf(
+            R.id.tab_insights,
+            R.id.tab_collections,
+            R.id.tab_podcast,
+            R.id.tab_more
+        ))
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        setupBottomNavMenu(navController)
+    }
+
+    private fun setupBottomNavMenu(navController: NavController) {
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNav?.setupWithNavController(navController)
     }
 
     private fun showAddCollectionDialog() {

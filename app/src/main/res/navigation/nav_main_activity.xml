@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main_activity"
+    app:startDestination="@id/tab_insights">
+
+    <fragment
+        android:id="@+id/tab_insights"
+        android:name="com.example.aifavs.insights.InsightsFragment"
+        android:label="@string/insights"
+        tools:layout="@layout/fragment_insights"/>
+
+    <fragment
+        android:id="@+id/tab_collections"
+        android:name="com.example.aifavs.collections.CollectionHomeFragment"
+        android:label="@string/my_collections"
+        tools:layout="@layout/fragment_collections"/>
+
+    <fragment
+        android:id="@+id/tab_podcast"
+        android:name="com.example.aifavs.podcast.PodcastFragment"
+        android:label="@string/podcast"
+        tools:layout="@layout/fragment_podcast"/>
+
+    <fragment
+        android:id="@+id/tab_more"
+        android:name="com.example.aifavs.settings.SettingsFragment"
+        android:label="@string/more"
+        tools:layout="@layout/fragment_settings" />
+
+    <activity
+        android:id="@+id/tab_ai_assistant"
+        android:name="com.example.aifavs.assistant.AssistantActivity"
+        android:label="activity_assistant"
+        tools:layout="@layout/activity_assistant" />
+
+    <activity
+        android:id="@+id/collectionListActivity"
+        android:name="com.example.aifavs.collections.CollectionListActivity"
+        android:label="CollectionListActivity"
+        tools:layout="@layout/activity_collection_list" />
+
+</navigation>
