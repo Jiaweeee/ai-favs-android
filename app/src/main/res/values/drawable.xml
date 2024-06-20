@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- DO NOT EDIT. This is to override default media3 notification drawables. -->
+<!--    <drawable name="media3_notification_play">@drawable/ic_notification_play</drawable>-->
+<!--    <drawable name="media3_notification_pause">@drawable/ic_notification_pause</drawable>-->
+    <drawable name="media3_notification_seek_to_next">@drawable/ic_forward_30_white</drawable>
+    <drawable name="media3_notification_seek_to_previous">@drawable/ic_replay_10_white</drawable>
+</resources>

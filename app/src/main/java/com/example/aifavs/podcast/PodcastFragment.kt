@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -72,6 +73,26 @@ class PodcastFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.addItemDecoration(BottomMarginDecoration(16f))
         adapter = PodcastListAdapter()
+        adapter.setOnItemClickListener {_adapter, _, position ->
+            val item = _adapter.getItem(position)
+            item?.let {
+                when(PodcastStatus.fromValue(it.status)) {
+                    PodcastStatus.GENERATING -> {
+                        // TODO
+                    }
+                    PodcastStatus.ERROR -> {
+                        // TODO
+                    }
+                    PodcastStatus.READY -> {
+                        val bundle = Bundle()
+                        bundle.putString("audioUrl", it.audioUrl())
+                        bundle.putString("title", it.title)
+                        findNavController().navigate(R.id.playerActivity, bundle)
+                    }
+                    else -> {}
+                }
+            }
+        }
         recyclerView.adapter = adapter
     }
 }
@@ -94,22 +115,22 @@ class PodcastListAdapter: BaseQuickAdapter<PodcastInfo, QuickViewHolder>() {
         }
         tvStatus.text = statusText
 
-        val btnPlay = holder.getView<ImageView>(R.id.btn_play)
-        btnPlay.isEnabled = status == PodcastStatus.READY
-        btnPlay.setOnClickListener {
-            when(status) {
-                PodcastStatus.GENERATING -> {
-
-                }
-                PodcastStatus.ERROR -> {
-
-                }
-                PodcastStatus.READY -> {
-
-                }
-                else -> {}
-            }
-        }
+//        val btnPlay = holder.getView<ImageView>(R.id.btn_play)
+//        btnPlay.isEnabled = status == PodcastStatus.READY
+//        btnPlay.setOnClickListener {
+//            when(status) {
+//                PodcastStatus.GENERATING -> {
+//
+//                }
+//                PodcastStatus.ERROR -> {
+//
+//                }
+//                PodcastStatus.READY -> {
+//
+//                }
+//                else -> {}
+//            }
+//        }
     }
 
     override fun onCreateViewHolder(

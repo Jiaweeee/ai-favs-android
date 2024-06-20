@@ -46,7 +46,7 @@ class MainActivity : BaseActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        val destination = intent?.getIntExtra(KEY_DEST, R.id.tab_insights) ?: return
+        val destination = intent?.getIntExtra(KEY_DEST, R.id.tab_collections) ?: return
         val navController = findNavController(R.id.nav_host_fragment)
         val navOptions = NavOptions.Builder()
             .setPopUpTo(R.id.nav_main_activity, true)

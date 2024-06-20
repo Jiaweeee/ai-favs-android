@@ -1,4 +1,4 @@
-package com.example.aifavs.assistant
+package com.example.aifavs.extensions
 
 import android.content.Context
 import android.view.View

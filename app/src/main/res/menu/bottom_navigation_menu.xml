@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@id/tab_insights"
-        android:icon="@drawable/ic_insights"
-        android:title="@string/insights" />
+<!--    <item-->
+<!--        android:id="@id/tab_insights"-->
+<!--        android:icon="@drawable/ic_insights"-->
+<!--        android:title="@string/insights" />-->
     <item
         android:id="@id/tab_collections"
         android:icon="@drawable/ic_collections"
@@ -16,8 +16,8 @@
         android:id="@id/tab_podcast"
         android:icon="@drawable/ic_podcast"
         android:title="@string/podcast"/>
-    <item
-        android:id="@id/tab_more"
-        android:icon="@drawable/ic_more"
-        android:title="@string/more"/>
+<!--    <item-->
+<!--        android:id="@id/tab_more"-->
+<!--        android:icon="@drawable/ic_more"-->
+<!--        android:title="@string/more"/>-->
 </menu>

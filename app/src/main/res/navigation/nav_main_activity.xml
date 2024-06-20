@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main_activity"
-    app:startDestination="@id/tab_insights">
+    app:startDestination="@id/tab_collections">
 
     <fragment
         android:id="@+id/tab_insights"
@@ -41,4 +41,19 @@
         android:label="CollectionListActivity"
         tools:layout="@layout/activity_collection_list" />
 
+    <activity
+        android:id="@+id/playerActivity"
+        android:name="com.example.aifavs.playback.PlayerActivity"
+        android:label="activity_player"
+        tools:layout="@layout/activity_player">
+        <argument
+            android:name="audioUrl"
+            app:argType="string" />
+<!--        <argument-->
+<!--            android:name="collectionUrl"-->
+<!--            app:argType="string" />-->
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </activity>
 </navigation>

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aifavs.base.BaseViewBindingActivity
 import com.example.aifavs.databinding.ActivityAssistantBinding
+import com.example.aifavs.extensions.hideKeyboard
 
 class AssistantActivity : BaseViewBindingActivity<ActivityAssistantBinding>() {
     private lateinit var viewModel: AssistantViewModel
