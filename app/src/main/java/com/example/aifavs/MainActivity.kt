@@ -14,15 +14,15 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.aifavs.base.BaseActivity
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.aifavs.base.BaseViewBindingActivity
+import com.example.aifavs.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseViewBindingActivity<ActivityMainBinding>() {
     private lateinit var viewModel: MainViewModel
     private lateinit var appBarConfiguration : AppBarConfiguration
+    private var curFragmentIndex = 0
 
     companion object {
         const val KEY_DEST = "destination"
@@ -36,7 +36,6 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         initNav()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.loading.observe(this) {
@@ -70,8 +69,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initNav() {
-        val toolBar = findViewById<MaterialToolbar>(R.id.tool_bar)
-        setSupportActionBar(toolBar)
+        setSupportActionBar(binding.toolBar)
 
         val host: NavHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment? ?: return
@@ -88,8 +86,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupBottomNavMenu(navController: NavController) {
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNav?.setupWithNavController(navController)
+        binding.bottomNavigation.setupWithNavController(navController)
     }
 
     private fun showAddCollectionDialog() {
