@@ -1,5 +1,7 @@
 package com.example.aifavs
 
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
@@ -58,6 +60,7 @@ data class Collection(
     val summary: String?,
     val highlights: List<String>?,
     @SerializedName("podcast_id") val podcastId: String?,
+    val podcast: PodcastInfo?,
 )
 
 @Serializable
@@ -72,6 +75,7 @@ data class CreatePodcastRequestBody(
 
 @Serializable
 data class PodcastInfo(
+    val id: String,
     val title: String,
     val status: Int,
     @SerializedName("file_path") val filePath: String? = null,

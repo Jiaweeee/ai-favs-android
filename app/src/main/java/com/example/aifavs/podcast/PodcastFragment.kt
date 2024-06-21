@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -106,31 +105,13 @@ class PodcastListAdapter: BaseQuickAdapter<PodcastInfo, QuickViewHolder>() {
         tvTitle.text = item.title
 
         val tvStatus = holder.getView<TextView>(R.id.tv_status)
-        val status = PodcastStatus.fromValue(item.status)
-        val statusText = when(status) {
+        val statusText = when(PodcastStatus.fromValue(item.status)) {
             PodcastStatus.GENERATING -> context.getString(R.string.podcast_status_generating)
             PodcastStatus.READY -> context.getString(R.string.podcast_status_ready)
             PodcastStatus.ERROR -> context.getString(R.string.podcast_status_error)
             else -> ""
         }
         tvStatus.text = statusText
-
-//        val btnPlay = holder.getView<ImageView>(R.id.btn_play)
-//        btnPlay.isEnabled = status == PodcastStatus.READY
-//        btnPlay.setOnClickListener {
-//            when(status) {
-//                PodcastStatus.GENERATING -> {
-//
-//                }
-//                PodcastStatus.ERROR -> {
-//
-//                }
-//                PodcastStatus.READY -> {
-//
-//                }
-//                else -> {}
-//            }
-//        }
     }
 
     override fun onCreateViewHolder(

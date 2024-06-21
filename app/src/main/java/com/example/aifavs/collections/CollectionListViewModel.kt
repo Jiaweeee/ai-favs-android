@@ -13,8 +13,8 @@ import io.reactivex.schedulers.Schedulers
 
 class CollectionListViewModel: ViewModel() {
     private val TAG = "ContentViewModel"
-    private val _contentList: MutableLiveData<List<Collection>> = MutableLiveData()
-    val contentList: LiveData<List<Collection>> get() = _contentList
+    private val _collectionList: MutableLiveData<List<Collection>> = MutableLiveData()
+    val collectionList: LiveData<List<Collection>> get() = _collectionList
 
     private val _refreshingList: MutableLiveData<Boolean> = MutableLiveData(false)
     val refreshingList: LiveData<Boolean> get() = _refreshingList
@@ -41,7 +41,7 @@ class CollectionListViewModel: ViewModel() {
             .subscribe({ response ->
                 val list = response.data
                 Log.d(TAG, "list.size = ${list?.size}")
-                list?.let { _contentList.postValue(it) }
+                list?.let { _collectionList.postValue(it) }
             }, { throwable ->
                 throwable?.message?.let { Log.e(TAG, it) }
             })

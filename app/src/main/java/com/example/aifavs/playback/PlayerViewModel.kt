@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlaybackException
@@ -29,6 +30,9 @@ class PlayerViewModel: ViewModel(), IPlayerEventsListener, Player.Listener {
     private val _progress: MutableLiveData<PlaybackProgress> = MutableLiveData()
     val progress: LiveData<PlaybackProgress> get() = _progress
 
+    private val _title: MutableLiveData<String> = MutableLiveData()
+    val title: LiveData<String> get() = _title
+
     private val controller = MyMediaController.getInstance(App.context)
     private val handler = Handler(Looper.getMainLooper())
 
@@ -43,10 +47,15 @@ class PlayerViewModel: ViewModel(), IPlayerEventsListener, Player.Listener {
 
     private fun withPlayer(callback: MediaController.() -> Unit) = controller.withController(callback)
 
-    fun playAudio(url: String) {
+    fun playAudio(url: String, title: String) {
         withPlayer {
             val mediaItem = MediaItem.Builder()
                 .setUri(url)
+                .setMediaMetadata(
+                    MediaMetadata.Builder()
+                        .setTitle(title)
+                        .build()
+                )
                 .build()
             setMediaItem(mediaItem)
             setupTrack(0, true)
@@ -54,7 +63,7 @@ class PlayerViewModel: ViewModel(), IPlayerEventsListener, Player.Listener {
         scheduleUIUpdate(true)
     }
 
-    private fun scheduleUIUpdate(immediate: Boolean = true, interval: Long = 1000L) {
+    fun scheduleUIUpdate(immediate: Boolean = true, interval: Long = 1000L) {
         cancelUiUpdate()
         withPlayer {
             val delay = if (immediate) 0 else interval
@@ -81,8 +90,10 @@ class PlayerViewModel: ViewModel(), IPlayerEventsListener, Player.Listener {
             PlaybackProgress(
             currentPlaybackPosition = player.currentPlaybackPosition,
             currentTrackDuration = player.currentTrackDuration
-        )
-        )
+        ))
+        player.currentMediaItem?.apply {
+            _title.postValue(mediaMetadata.title.toString())
+        }
     }
 
     /**

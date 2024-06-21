@@ -49,9 +49,6 @@
         <argument
             android:name="audioUrl"
             app:argType="string" />
-<!--        <argument-->
-<!--            android:name="collectionUrl"-->
-<!--            app:argType="string" />-->
         <argument
             android:name="title"
             app:argType="string" />

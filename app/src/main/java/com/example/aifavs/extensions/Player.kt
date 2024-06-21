@@ -25,3 +25,9 @@ val Player.currentPlaybackPosition: Long
 
 val Player.currentTrackDuration: Long
     get() = if (duration > 0) duration else 0L
+
+val Player.isReallyPlaying: Boolean
+    get() = when (playbackState) {
+        Player.STATE_ENDED, Player.STATE_IDLE -> false
+        else -> isPlaying || playWhenReady
+    }

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_surface"
+    android:background="?attr/colorSurface"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -26,12 +26,24 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_main_activity" />
 
+    <include
+        android:id="@+id/mini_player"
+        layout="@layout/layout_mini_player_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="?attr/colorOnSurfaceVariant"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparent"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu"/>
 
 </LinearLayout>

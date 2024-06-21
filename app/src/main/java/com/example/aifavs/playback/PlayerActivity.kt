@@ -4,31 +4,39 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.example.aifavs.R
-import com.example.aifavs.base.BaseViewBindingActivity
+import com.example.aifavs.base.BaseMediaControlActivity
 import com.example.aifavs.databinding.ActivityPlayerBinding
 import com.example.aifavs.playback.player.PlaybackProgress
 import com.example.aifavs.playback.player.PlayerStates
 
-class PlayerActivity : BaseViewBindingActivity<ActivityPlayerBinding>() {
+class PlayerActivity : BaseMediaControlActivity<ActivityPlayerBinding>() {
     private lateinit var viewModel: PlayerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[PlayerViewModel::class.java]
-        val args = PlayerActivityArgs.fromBundle(intent.extras!!)
-        initViews(args)
+        initViews()
+        intent.apply {
+            if (extras != null) {
+                val args = PlayerActivityArgs.fromBundle(extras!!)
+                viewModel.playAudio(args.audioUrl, args.title)
+            } else {
+                viewModel.scheduleUIUpdate()
+            }
+        }
         viewModel.playerState.observe(this) { state ->
             updatePlaybackControls(state)
         }
         viewModel.progress.observe(this) {
             updateProgress(it)
         }
-        viewModel.playAudio(args.audioUrl)
+        viewModel.title.observe(this) {
+            binding.tvTitle.text = it
+        }
     }
 
-    private fun initViews(args: PlayerActivityArgs) {
+    private fun initViews() {
         binding.apply {
-            tvTitle.text = args.title
             playbackControls.btnForward.setOnClickListener {
                 viewModel.onSeekForward()
             }

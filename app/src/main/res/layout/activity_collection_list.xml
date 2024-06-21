@@ -34,4 +34,10 @@
             tools:listitem="@layout/layout_content_list_item"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <include
+        android:id="@+id/mini_player"
+        layout="@layout/layout_mini_player_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

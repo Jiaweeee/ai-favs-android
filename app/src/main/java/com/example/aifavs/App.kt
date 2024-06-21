@@ -19,6 +19,7 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         initController()
+        ALog.init(BuildConfig.DEBUG)
     }
 
 

@@ -14,15 +14,14 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.aifavs.base.BaseViewBindingActivity
+import com.example.aifavs.base.BaseMediaControlActivity
 import com.example.aifavs.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 
-class MainActivity : BaseViewBindingActivity<ActivityMainBinding>() {
+class MainActivity : BaseMediaControlActivity<ActivityMainBinding>() {
     private lateinit var viewModel: MainViewModel
     private lateinit var appBarConfiguration : AppBarConfiguration
-    private var curFragmentIndex = 0
 
     companion object {
         const val KEY_DEST = "destination"
@@ -37,6 +36,7 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initNav()
+        setupMiniPlayer(binding.miniPlayer.root)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.loading.observe(this) {
             showLoading(it)

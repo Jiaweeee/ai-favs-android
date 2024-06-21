@@ -2,6 +2,7 @@ package com.example.aifavs.collections
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
@@ -19,12 +20,13 @@ import com.example.aifavs.Collection
 import com.example.aifavs.MainActivity
 import com.example.aifavs.R
 import com.example.aifavs.WebViewActivity
-import com.example.aifavs.base.BaseViewBindingActivity
+import com.example.aifavs.base.BaseMediaControlActivity
 import com.example.aifavs.databinding.ActivityCollectionListBinding
 import com.example.aifavs.dp2px
+import com.example.aifavs.playback.PlayerActivity
 import com.google.android.material.snackbar.Snackbar
 
-class CollectionListActivity : BaseViewBindingActivity<ActivityCollectionListBinding>() {
+class CollectionListActivity : BaseMediaControlActivity<ActivityCollectionListBinding>() {
     private lateinit var viewModel: CollectionListViewModel
     private lateinit var mAdapter: ContentListAdapter
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
@@ -41,11 +43,12 @@ class CollectionListActivity : BaseViewBindingActivity<ActivityCollectionListBin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
+        setupMiniPlayer(binding.miniPlayer.root)
         viewModel = ViewModelProvider(this)[CollectionListViewModel::class.java]
         categoryId = intent.getStringExtra(KEY_CATEGORY_ID)
         tagId = intent.getStringExtra(KEY_TAG_ID)
         viewModel.getContentList(categoryId, tagId)
-        viewModel.contentList.observe(this) { list ->
+        viewModel.collectionList.observe(this) { list ->
             mAdapter.submitList(list)
             mAdapter.notifyDataSetChanged()
         }
@@ -108,7 +111,14 @@ class CollectionListActivity : BaseViewBindingActivity<ActivityCollectionListBin
             name = "Play Podcast",
             icon = R.drawable.ic_play_circle
         ) {
-            // TODO: play the podcast
+            val bundle = Bundle()
+            collection.apply {
+                bundle.putString("audioUrl", podcast?.audioUrl())
+                bundle.putString("title", title)
+            }
+            val intent = Intent(this, PlayerActivity::class.java)
+            intent.putExtras(bundle)
+            startActivity(intent)
         }
         val showSummaryOption = Option(
             name = "Show AI Summary",
@@ -118,7 +128,7 @@ class CollectionListActivity : BaseViewBindingActivity<ActivityCollectionListBin
         }
         val options = mutableListOf<Option>()
         options.add(showSummaryOption)
-        if (collection.podcastId == null) {
+        if (collection.podcast == null) {
             options.add(createPodcastOption)
         } else {
             options.add(playPodcastOption)
