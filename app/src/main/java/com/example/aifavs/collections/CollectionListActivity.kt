@@ -24,6 +24,7 @@ import com.example.aifavs.base.BaseMediaControlActivity
 import com.example.aifavs.databinding.ActivityCollectionListBinding
 import com.example.aifavs.dp2px
 import com.example.aifavs.playback.PlayerActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
 class CollectionListActivity : BaseMediaControlActivity<ActivityCollectionListBinding>() {
@@ -124,16 +125,31 @@ class CollectionListActivity : BaseMediaControlActivity<ActivityCollectionListBi
             name = "Show AI Summary",
             icon = R.drawable.ic_ai_star_color_on_surface
         ) {
-            // TODO: show AI summary
+            showAISummaryDialog(collection.summary!!)
         }
         val options = mutableListOf<Option>()
-        options.add(showSummaryOption)
-        if (collection.podcast == null) {
-            options.add(createPodcastOption)
-        } else {
-            options.add(playPodcastOption)
+        collection.apply {
+            if (summary != null) {
+                options.add(showSummaryOption)
+            }
+            if (podcast != null) {
+                options.add(playPodcastOption)
+            } else {
+                options.add(createPodcastOption)
+            }
         }
         return options
+    }
+
+    private fun showAISummaryDialog(content: String) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("AI Summary")
+            .setMessage(content)
+            .setPositiveButton("OK") { dialogInterface, _ ->
+                dialogInterface.dismiss()
+            }
+            .create()
+            .show()
     }
 }
 
