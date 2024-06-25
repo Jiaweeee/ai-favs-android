@@ -24,6 +24,7 @@ import com.example.aifavs.base.BaseMediaControlActivity
 import com.example.aifavs.databinding.ActivityCollectionListBinding
 import com.example.aifavs.dp2px
 import com.example.aifavs.playback.PlayerActivity
+import com.example.aifavs.podcast.PodcastStatus
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
@@ -106,6 +107,7 @@ class CollectionListActivity : BaseMediaControlActivity<ActivityCollectionListBi
                         finish()
                     }
                     .show()
+                viewModel.getContentList(categoryId, tagId)
             }
         }
         val playPodcastOption = Option(
@@ -132,7 +134,7 @@ class CollectionListActivity : BaseMediaControlActivity<ActivityCollectionListBi
             if (summary != null) {
                 options.add(showSummaryOption)
             }
-            if (podcast != null) {
+            if (podcast != null && podcast.isReady()) {
                 options.add(playPodcastOption)
             } else {
                 options.add(createPodcastOption)

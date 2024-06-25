@@ -2,6 +2,7 @@ package com.example.aifavs
 
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import com.example.aifavs.podcast.PodcastStatus
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
@@ -84,4 +85,11 @@ data class PodcastInfo(
     @SerializedName("collection_url") val collectionUrl: String,
 ) {
     fun audioUrl() = "${BuildConfig.BASE_URL}$filePath"
+
+    fun isReady() = PodcastStatus.fromValue(status) == PodcastStatus.READY
 }
+
+@Serializable
+data class UserInfo(
+    val id: String
+)

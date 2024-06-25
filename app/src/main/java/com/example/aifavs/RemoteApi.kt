@@ -24,4 +24,7 @@ interface RemoteApi {
 
     @GET("/podcast/list/get")
     fun getPodcastList(): Observable<BaseResponse<List<PodcastInfo>>>
+
+    @POST("/user/signup")
+    fun signUp(): Observable<BaseResponse<UserInfo>>
 }
