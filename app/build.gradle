@@ -20,6 +20,28 @@ def getProperty(String fileName, String propName) {
     }
 }
 
+def generateVersionName() {
+    def major = project.property("major")
+    def minor = project.property("minor")
+    def patch = project.property("patch")
+    return "${major}.${minor}.${patch}"
+}
+
+def generateVersionCode() {
+    int majorInt = project.property("major").toString().toInteger()
+    int minorInt = project.property("minor").toString().toInteger()
+    int patchInt = project.property("patch").toString().toInteger()
+    if (isValid(majorInt) && isValid(minorInt) && isValid(patchInt)) {
+        return majorInt * 10000 + minorInt * 100 + patchInt
+    } else {
+        throw new RuntimeException("Invalid app version. Please check!")
+    }
+}
+
+def isValid(int num) {
+    return num >= 0 && num <= 99
+}
+
 android {
     namespace 'com.example.aifavs'
     compileSdk 34
@@ -28,10 +50,9 @@ android {
         applicationId "com.example.aifavs"
         minSdk 24
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode generateVersionCode()
+        versionName generateVersionName()
 
-        buildConfigField "String", "BASE_URL", "\"${getProperty("local.properties", "base_url")}\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -40,12 +61,37 @@ android {
         viewBinding true
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("../misc/release-key.keystore")
+            storePassword = "aifavs"
+            keyAlias = "aifavs-release-key"
+            keyPassword = "aifavs"
+        }
+    }
+
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", "\"${getProperty("local.properties", "base_url")}\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", "\"${getProperty("gradle.properties", "base_url")}\""
+            signingConfig = signingConfigs.getByName("release")
         }
     }
+
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            def newName = "AIFavs-${variant.name}-${variant.versionName}.apk"
+            outputFileName = newName
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
