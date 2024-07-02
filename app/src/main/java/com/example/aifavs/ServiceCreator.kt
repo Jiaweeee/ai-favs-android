@@ -3,6 +3,7 @@ package com.example.aifavs
 import com.example.aifavs.SharedPrefHelper.get
 import com.example.aifavs.SharedPrefHelper.set
 import okhttp3.Dispatcher
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -36,6 +37,18 @@ object ServiceCreator {
         dispatcher.maxRequests = 8
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+
+        val sseSkippingInterceptor = Interceptor { chain ->
+            val request = chain.request()
+            val response = chain.proceed(request)
+
+            if (response.header("Content-Type")?.contains("text/event-stream") == true) {
+                response
+            } else {
+                httpLoggingInterceptor.intercept(chain)
+            }
+        }
+
         return OkHttpClient().newBuilder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS)
@@ -58,7 +71,7 @@ object ServiceCreator {
                     .build()
                 chain.proceed(newRequest)
             }
-            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(sseSkippingInterceptor)
             .dispatcher(dispatcher)
             .build()
     }
