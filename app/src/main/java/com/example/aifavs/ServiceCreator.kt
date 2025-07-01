@@ -32,46 +32,48 @@ object ServiceCreator {
             .build()
     }
 
-    fun createOkHttpClient(): OkHttpClient {
+    fun createSseClient(): OkHttpClient {
+        return createBaseOkHttpClientBuilder().build()
+    }
+
+    private fun createOkHttpClient(): OkHttpClient {
         val dispatcher = Dispatcher()
         dispatcher.maxRequests = 8
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
-        val sseSkippingInterceptor = Interceptor { chain ->
-            val request = chain.request()
+        return createBaseOkHttpClientBuilder()
+            .addInterceptor(httpLoggingInterceptor)
+            .dispatcher(dispatcher)
+            .build()
+    }
 
-            if (request.url.toString().contains("/chat/stream")) {
-                chain.proceed(request)
-            } else {
-                httpLoggingInterceptor.intercept(chain)
-            }
-        }
-
+    private fun createBaseOkHttpClientBuilder(): OkHttpClient.Builder {
         return OkHttpClient().newBuilder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
-            .addInterceptor { chain ->
-                val pref = SharedPrefHelper.getPref(App.context)
-                var userId: String? = pref["user_id"]
-                if (userId?.isEmpty() == true) {
-                    val remoteApi = createSignUpRetrofit().create(RemoteApi::class.java)
-                    val signUpResponse = remoteApi.signUp().blockingFirst()
-                    if (signUpResponse.isSuccess()) {
-                        userId = signUpResponse.data?.id
-                        pref["user_id"] = userId
-                    } else {
-                        throw IOException("Signup failed with code ${signUpResponse.code}")
-                    }
+            .addInterceptor(createUserAuthInterceptor())
+    }
+
+    private fun createUserAuthInterceptor(): Interceptor {
+        return Interceptor { chain ->
+            val pref = SharedPrefHelper.getPref(App.context)
+            var userId: String? = pref["user_id"]
+            if (userId?.isEmpty() == true) {
+                val remoteApi = createSignUpRetrofit().create(RemoteApi::class.java)
+                val signUpResponse = remoteApi.signUp().blockingFirst()
+                if (signUpResponse.isSuccess()) {
+                    userId = signUpResponse.data?.id
+                    pref["user_id"] = userId
+                } else {
+                    throw IOException("Signup failed with code ${signUpResponse.code}")
                 }
-                val newRequest = chain.request().newBuilder()
-                    .addHeader("X-USER-ID", userId!!)
-                    .build()
-                chain.proceed(newRequest)
             }
-            .addInterceptor(sseSkippingInterceptor)
-            .dispatcher(dispatcher)
-            .build()
+            val newRequest = chain.request().newBuilder()
+                .addHeader("X-USER-ID", userId!!)
+                .build()
+            chain.proceed(newRequest)
+        }
     }
 }

@@ -15,7 +15,7 @@ import okhttp3.sse.EventSources
 class ChatStreamHandler {
     private val TAG = "ChatStreamHandler"
 
-    private val client by lazy { ServiceCreator.createOkHttpClient() }
+    private val client by lazy { ServiceCreator.createSseClient() }
     private var eventSource: EventSource? = null
 
     fun startChatStream(input: String, messages: List<ChatMessage> = emptyList(), callback: ChatStreamCallback) {
@@ -25,6 +25,8 @@ class ChatStreamHandler {
         val body = jsonStr.toRequestBody(mediaTypeStr.toMediaType())
         val request = Request.Builder()
             .url(url)
+            .header("Accept", "application/json; q=0.5")
+            .addHeader("Accept", "text/event-stream")
             .post(body)
             .build()
 
