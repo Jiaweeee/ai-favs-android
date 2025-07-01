@@ -40,10 +40,9 @@ object ServiceCreator {
 
         val sseSkippingInterceptor = Interceptor { chain ->
             val request = chain.request()
-            val response = chain.proceed(request)
 
-            if (response.header("Content-Type")?.contains("text/event-stream") == true) {
-                response
+            if (request.url.toString().contains("/chat/stream")) {
+                chain.proceed(request)
             } else {
                 httpLoggingInterceptor.intercept(chain)
             }
