@@ -8,6 +8,7 @@ import com.example.aifavs.PodcastInfo
 import com.example.aifavs.RemoteApi
 import com.example.aifavs.ServiceCreator
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class PodcastViewModel : ViewModel() {
@@ -21,11 +22,15 @@ class PodcastViewModel : ViewModel() {
     private val remoteApi: RemoteApi by lazy {
         ServiceCreator.create(RemoteApi::class.java)
     }
-
+    
+    private var fetchDataDisposable: Disposable? = null
 
     fun fetchData() {
+        // 取消之前的请求
+        fetchDataDisposable?.dispose()
+        
         _loading.postValue(true)
-        val disposable = remoteApi.getPodcastList()
+        fetchDataDisposable = remoteApi.getPodcastList()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally { _loading.postValue(false) }
@@ -38,5 +43,11 @@ class PodcastViewModel : ViewModel() {
                     Log.w(TAG, it)
                 }
             })
+    }
+    
+    override fun onCleared() {
+        super.onCleared()
+        // 清理资源
+        fetchDataDisposable?.dispose()
     }
 }

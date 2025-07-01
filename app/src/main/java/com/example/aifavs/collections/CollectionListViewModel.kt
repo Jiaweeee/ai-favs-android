@@ -9,10 +9,11 @@ import com.example.aifavs.CreatePodcastRequestBody
 import com.example.aifavs.RemoteApi
 import com.example.aifavs.ServiceCreator
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class CollectionListViewModel: ViewModel() {
-    private val TAG = "ContentViewModel"
+    private val TAG = "CollectionListViewModel"
     private val _collectionList: MutableLiveData<List<Collection>> = MutableLiveData()
     val collectionList: LiveData<List<Collection>> get() = _collectionList
 
@@ -22,17 +23,22 @@ class CollectionListViewModel: ViewModel() {
     private val _loading: MutableLiveData<Boolean> = MutableLiveData(false)
     val loading: LiveData<Boolean> get() = _loading
 
-
     private val remoteApi: RemoteApi by lazy {
         ServiceCreator.create(RemoteApi::class.java)
     }
+    
+    private var getContentListDisposable: Disposable? = null
+    private var createPodcastDisposable: Disposable? = null
 
     fun getContentList(
         categoryId: String? = null,
         tagId: String? = null
     ) {
+        // 取消之前的请求
+        getContentListDisposable?.dispose()
+        
         _refreshingList.postValue(true)
-        val disposable = remoteApi.getCollectionList(categoryId, tagId)
+        getContentListDisposable = remoteApi.getCollectionList(categoryId, tagId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally {
@@ -45,12 +51,14 @@ class CollectionListViewModel: ViewModel() {
             }, { throwable ->
                 throwable?.message?.let { Log.e(TAG, it) }
             })
-
     }
 
     fun createPodcast(collectionId: String, onSuccess: () -> Unit = {}) {
+        // 取消之前的请求
+        createPodcastDisposable?.dispose()
+        
         _loading.postValue(true)
-        val disposable = remoteApi.createPodcast(CreatePodcastRequestBody(collectionId = collectionId))
+        createPodcastDisposable = remoteApi.createPodcast(CreatePodcastRequestBody(collectionId = collectionId))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally {
@@ -63,6 +71,12 @@ class CollectionListViewModel: ViewModel() {
             }, { throwable ->
                 throwable?.message?.let { Log.e(TAG, it) }
             })
-
+    }
+    
+    override fun onCleared() {
+        super.onCleared()
+        // 清理资源
+        getContentListDisposable?.dispose()
+        createPodcastDisposable?.dispose()
     }
 }
